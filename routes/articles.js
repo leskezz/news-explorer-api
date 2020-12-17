@@ -2,7 +2,7 @@ const cardsRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
   sendAllCards, createCard, deleteCard, likeCard, dislikeCard,
-} = require('../controllers/cards');
+} = require('../controllers/articles');
 
 cardsRouter.get('/', sendAllCards);
 cardsRouter.post('/', celebrate({

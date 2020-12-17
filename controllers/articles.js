@@ -1,4 +1,4 @@
-const Card = require('../models/card.js');
+const Card = require('../models/article.js');
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
 
