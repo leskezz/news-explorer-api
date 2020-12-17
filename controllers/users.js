@@ -4,20 +4,6 @@ const User = require('../models/user.js');
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
 
-const sendAllUsers = (req, res, next) => {
-  User.find({})
-    .orFail(new NotFoundError('Пользователи не найдены'))
-    .then((users) => res.send({ data: users }))
-    .catch(next);
-};
-
-const sendUser = (req, res, next) => {
-  User.findById(req.params.id)
-    .orFail(new NotFoundError('Пользователь с данным id не найден'))
-    .then((user) => res.send({ data: user }))
-    .catch(next);
-};
-
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
@@ -36,36 +22,6 @@ const createUser = (req, res, next) => {
         })
         .catch(next);
     });
-};
-
-const updateUser = (req, res, next) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, about },
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-    },
-  )
-    .orFail(new NotFoundError('Пользователь с таким id не найдены'))
-    .then((user) => res.send({ data: user }))
-    .catch(next);
-};
-
-const updateAvatar = (req, res, next) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-    },
-  )
-    .orFail(new NotFoundError('Пользователь с таким id не найдены'))
-    .then((user) => res.send({ data: user }))
-    .catch(next);
 };
 
 const login = (req, res, next) => {
@@ -91,11 +47,7 @@ const sendCurrentUser = (req, res, next) => {
 };
 
 module.exports = {
-  sendAllUsers,
-  sendUser,
   createUser,
-  updateUser,
-  updateAvatar,
   login,
   sendCurrentUser,
 };
