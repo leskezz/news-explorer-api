@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
-const cardsRouter = require('./routes/cards.js');
+const articlesRouter = require('./routes/articles.js');
 const usersRouter = require('./routes/users.js');
 const {
   login, createUser,
@@ -46,7 +46,7 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use('/cards', cardsRouter);
+app.use('/articles', articlesRouter);
 app.use('/users', usersRouter);
 
 // eslint-disable-next-line no-unused-vars
