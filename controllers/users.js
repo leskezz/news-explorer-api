@@ -5,14 +5,12 @@ const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
 
 const createUser = (req, res, next) => {
-  const {
-    name, about, avatar, email,
-  } = req.body;
+  const { name, email } = req.body;
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       const password = hash;
       User.create({
-        name, about, avatar, email, password,
+        name, email, password,
       })
         .then((user) => {
           if (!user) {
