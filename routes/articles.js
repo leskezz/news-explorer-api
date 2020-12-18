@@ -1,21 +1,28 @@
 const articlesRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { sendAllCards, createCard, deleteCard } = require('../controllers/articles');
+const { sendAllArticles, createArticle, deleteArticle } = require('../controllers/articles');
 
-articlesRouter.get('/', sendAllCards);
+// eslint-disable-next-line no-useless-escape
+const regLink = /^https?:\/\/(www\.)?[\w-._~:\/?#\[\]@!$&'()*+,;=]+(\.[a-z]+)[[\w-._~:\/?#\[\]@!$&'()%*+,;=]*#?$/;
+
+articlesRouter.get('/', sendAllArticles);
 
 articlesRouter.post('/', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    // eslint-disable-next-line no-useless-escape
-    link: Joi.string().regex(/^https?:\/\/(www\.)?[\w-._~:\/?#\[\]@!$&'()*+,;=]+(\.[a-z]+)[[\w-._~:\/?#\[\]@!$&'()%*+,;=]*#?$/).required().min(2),
+    keyword: Joi.string().required().min(2),
+    title: Joi.string().required().min(2),
+    text: Joi.string().required().min(2),
+    date: Joi.date().required(),
+    source: Joi.string().required().min(2),
+    link: Joi.string().regex(regLink).required().min(2),
+    image: Joi.string().regex(regLink).required().min(2),
   }),
-}), createCard);
+}), createArticle);
 
 articlesRouter.delete('/:articleId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }),
-}), deleteCard);
+}), deleteArticle);
 
 module.exports = articlesRouter;
