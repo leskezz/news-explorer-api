@@ -5,7 +5,6 @@ const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-console.log(NODE_ENV, JWT_SECRET);
 
 const createUser = (req, res, next) => {
   const { name, email } = req.body;
