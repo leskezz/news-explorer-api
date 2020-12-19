@@ -4,6 +4,9 @@ const User = require('../models/user.js');
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+console.log(NODE_ENV, JWT_SECRET);
+
 const createUser = (req, res, next) => {
   const { name, email } = req.body;
   bcrypt.hash(req.body.password, 10)
@@ -29,7 +32,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        '01bd5003e8f4ed785eea80483d73e553344b65b3fd2ad2bc44bbda20cfe83e7f',
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
       return res.send({ token });
