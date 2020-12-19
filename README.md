@@ -13,3 +13,4 @@ Express.js.
 - Логировние запросов и ошибок;
 - Централизованная обработка ошибок.
 
+Сервер доступен по адресу: https://aikozlovskynews.students.nomoredomains.icu
