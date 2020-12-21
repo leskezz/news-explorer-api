@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-error');
+const DatabaseError = require('../errors/database-error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -18,7 +19,13 @@ const createUser = (req, res, next) => {
           if (!user) {
             return new ValidationError('Переданы невалидные данные в методы создания пользователя');
           }
-          return res.send({ data: user });
+          return res.send({ data: { _id: user._id, email: user.email, name: user.name } });
+        })
+        .catch((err) => {
+          if (err.code === 11000) {
+            throw new DatabaseError('Данный пользователь уже зарегистрирован');
+          }
+          return err;
         })
         .catch(next);
     });
@@ -42,7 +49,7 @@ const login = (req, res, next) => {
 const sendCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new NotFoundError('Not Found'))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ data: { email: user.email, name: user.name } }))
     .catch(next);
 };
 

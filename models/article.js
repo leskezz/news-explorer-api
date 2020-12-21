@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line no-useless-escape
-const regex = /^https?:\/\/(www\.)?[\w-._~:\/?#\[\]@!$&'()*+,;=]+(\.[a-z]+)[[\w-._~:\/?#\[\]@!$&'()%*+,;=]*#?$/;
+const validator = require('validator');
 
 const articleSchema = new mongoose.Schema({
   keyword: {
@@ -32,7 +31,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regex.test(v);
+        return validator.isURL(v);
       },
       message: 'Некорректная ссылка на статью',
     },
@@ -42,7 +41,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regex.test(v);
+        return validator.isURL(v);
       },
       message: 'Некорректная ссылка на иллюстрацию к статье',
     },
@@ -51,6 +50,7 @@ const articleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
+    select: false,
   },
 });
 

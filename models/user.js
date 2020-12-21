@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const NotFoundError = require('../errors/not-found-err');
+const WrongAuthError = require('../errors/wrong-auth-err');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -29,14 +29,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
-    .orFail(new NotFoundError('Неправильные почта или пароль'))
+    .orFail(new WrongAuthError('Неправильные почта или пароль'))
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
         if (!matched) {
-          return Promise.reject(new NotFoundError('Неправильные почта или пароль'));
+          return Promise.reject(new WrongAuthError('Неправильные почта или пароль'));
         }
         return user;
       }));
