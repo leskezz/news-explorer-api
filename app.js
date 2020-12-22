@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -8,13 +7,11 @@ const routes = require('./routes/index.js');
 const errorsHandler = require('./middlewares/errors-handler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimiter = require('./middlewares/rate-limiter');
-const NotFoundError = require('./errors/not-found-err');
-
-const { PORT = 3000, MONGO_URL } = process.env;
+const { PORT, mongoURL } = require('./utils/config');
 
 const app = express();
 
-mongoose.connect(MONGO_URL, {
+mongoose.connect(mongoURL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -28,10 +25,6 @@ app.use(cors());
 app.use(rateLimiter);
 
 app.use('/', routes);
-
-app.use((req, res) => {
-  throw new NotFoundError('Запрашиваемый ресурс не найден');
-});
 
 app.use(errorLogger);
 
