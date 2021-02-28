@@ -4,7 +4,8 @@ const ValidationError = require('../errors/validation-error');
 const ForbiddenError = require('../errors/forbidden');
 
 const sendAllArticles = (req, res, next) => {
-  Article.find({})
+  const owner = req.user._id;
+  Article.find({ owner })
     .orFail(new NotFoundError('Статьи не найдены'))
     .then((articles) => res.send({ data: articles }))
     .catch(next);
